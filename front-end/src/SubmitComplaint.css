@@ -1,0 +1,175 @@
+.sc-container {
+  max-width: 400px;
+  margin: 0 auto 80px auto;
+  padding: 0 16px 0 16px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  min-height: 100vh;
+  position: relative;
+}
+
+.sc-header {
+  display: flex;
+  align-items: center;
+  padding-top: 24px;
+  margin-bottom: 8px;
+}
+
+.sc-back-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.sc-header-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.sc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.sc-label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.sc-type-btns {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.sc-type-btns button {
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  border-radius: 20px;
+  background: #eee;
+  color: #222;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.sc-type-btns .active {
+  background: #222;
+  color: #fff;
+}
+
+.sc-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  background: #f7f7f7;
+}
+
+.sc-textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  background: #f7f7f7;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.sc-attachment-box {
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  background: #fafafa;
+  margin-bottom: 8px;
+}
+
+.sc-media-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.sc-media-desc {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.sc-upload-btn {
+  display: inline-block;
+  padding: 8px 24px;
+  border-radius: 20px;
+  background: #eee;
+  color: #222;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.sc-upload-btn:hover {
+  background: #ddd;
+}
+
+.sc-submit-btn {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.sc-submit-btn:hover {
+  background: #444;
+}
+
+.sc-bottom-nav {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0 6px 0;
+  z-index: 10;
+}
+
+.sc-bottom-nav button {
+  background: none;
+  border: none;
+  color: #222;
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.2s, background 0.2s;
+  border-radius: 8px;
+  padding: 4px 10px;
+}
+
+.sc-bottom-nav .active {
+  color: #fff;
+  background: #222;
+}
