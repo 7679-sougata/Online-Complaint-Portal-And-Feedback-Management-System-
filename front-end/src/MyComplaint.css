@@ -116,3 +116,56 @@
   color: #fff;
   background: #222;
 }
+
+/* new */
+/* new */
+.mc-item-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.view-btn,
+.escalate-btn {
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* View Button */
+.view-btn {
+  background: linear-gradient(135deg, #4a90e2, #357ae8);
+  color: white;
+}
+
+.view-btn:hover {
+  background: linear-gradient(135deg, #3d7edb, #2f6bd6);
+  transform: translateY(-1px);
+}
+
+/* Escalate Button */
+.escalate-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ff3b3b);
+  color: white;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.escalate-btn:hover {
+  background: linear-gradient(135deg, #ff4c4c, #e60000);
+  transform: translateY(-1px);
+}
+
+/* Add smooth press effect */
+.view-btn:active,
+.escalate-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

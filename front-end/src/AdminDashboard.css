@@ -124,3 +124,38 @@
 .logout-btn:active {
   transform: scale(0.95);
 }
+
+
+
+/*new */
+.escalated-row {
+  background-color: #ffeaea;
+  border-left: 4px solid #ff4d4d;
+}
+
+.escalated-flag {
+  color: #c00;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.escalate-btn {
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.escalate-btn:hover {
+  background-color: #e60000;
+}

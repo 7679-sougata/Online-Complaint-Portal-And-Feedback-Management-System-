@@ -1,0 +1,138 @@
+.escalate-container {
+  padding: 20px;
+  background: #fff;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.escalate-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.back-btn {
+  border: none;
+  background: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #333;
+}
+
+.complaint-details {
+  margin-top: 25px;
+}
+
+.complaint-box {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  font-size: 28px;
+  margin-right: 12px;
+}
+
+.subject {
+  font-weight: 600;
+  color: #333;
+}
+
+.id {
+  color: #888;
+  font-size: 14px;
+}
+
+.options-section {
+  margin-top: 25px;
+}
+
+.authority-select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.notify-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 24px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 24px;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #28a745;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.escalate-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.escalate-btn:disabled {
+  background-color: #888;
+  cursor: not-allowed;
+}
+
+.message {
+  text-align: center;
+  color: #28a745;
+  font-weight: 600;
+  margin-bottom: 20px;
+}

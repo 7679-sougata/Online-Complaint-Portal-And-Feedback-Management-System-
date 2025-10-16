@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -217,6 +216,7 @@ app.put("/admin/complaints/:id", async (req, res) => {
     await pool.query(
       `INSERT INTO status_logs (complaint_id, status, comment, updated_by)
        VALUES (?, ?, ?, ?)`,
+
       [complaintId, status, "Status updated by admin", admin_id || null]
     );
 
@@ -233,13 +233,105 @@ app.put("/admin/complaints/:id", async (req, res) => {
 ============================= */
 app.get("/admin/staff", async (req, res) => {
   try {
-    const [rows] = await pool.query(`SELECT id, name, email FROM users WHERE role = 'staff'`);
+    // ✅ Include both admin and staff roles in the list
+    const [rows] = await pool.query(`
+      SELECT id, name, email
+      FROM users
+      WHERE role IN ('admin', 'staff')
+    `);
     res.json(rows);
   } catch (err) {
     console.error("Admin staff error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
+/* =============================
+   ADMIN: ESCALATE COMPLAINT (Manual)
+============================= */
+app.post("/admin/complaints/:id/escalate", async (req, res) => {
+  const complaintId = req.params.id;
+  const { higher_authority_id, notify_all } = req.body;
+
+  try {
+    const [rows] = await pool.query("SELECT * FROM complaints WHERE id = ?", [complaintId]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
+
+    await pool.query(
+      `UPDATE complaints
+       SET status = 'Escalated',
+           escalated = 1,
+           escalated_at = NOW(),
+           assigned_to = ?,
+           updated_at = NOW()
+       WHERE id = ?`,
+      [higher_authority_id, complaintId]
+    );
+
+    await pool.query(
+      `INSERT INTO status_logs (complaint_id, status, comment, updated_by)
+       VALUES (?, ?, ?, ?)`,
+      [complaintId, "Escalated", "Complaint escalated to higher authority", higher_authority_id]
+    );
+
+    if (notify_all) {
+      console.log(`📩 Notification: Complaint #${complaintId} escalated to user ID ${higher_authority_id}`);
+    }
+
+    res.status(200).json({ message: "Complaint escalated successfully" });
+  } catch (err) {
+    console.error("❌ Escalation error:", err);
+    res.status(500).json({ message: "Failed to escalate complaint", error: err.message });
+  }
+});
+
+/* =============================
+   AUTO-ESCALATION CHECK (Runs hourly)
+============================= */
+const AUTO_ESCALATE_DAYS = 7; // threshold days
+const HIGHER_AUTHORITY_ID = 1; // senior admin ID (update to match your DB)
+
+async function autoEscalateComplaints() {
+  try {
+    const [pending] = await pool.query(
+      `SELECT id FROM complaints
+       WHERE status NOT IN ('Resolved', 'Closed')
+         AND escalated = 0
+         AND TIMESTAMPDIFF(DAY, updated_at, NOW()) >= ?`,
+      [AUTO_ESCALATE_DAYS]
+    );
+
+    for (const c of pending) {
+      await pool.query(
+        `UPDATE complaints
+         SET status = 'Escalated',
+             escalated = 1,
+             escalated_at = NOW(),
+             assigned_to = ?,
+             updated_at = NOW()
+         WHERE id = ?`,
+        [HIGHER_AUTHORITY_ID, c.id]
+      );
+
+      await pool.query(
+        `INSERT INTO status_logs (complaint_id, status, comment, updated_by)
+         VALUES (?, 'Escalated', 'Auto-escalated after 7 days of inactivity', ?)`,
+        [c.id, HIGHER_AUTHORITY_ID]
+      );
+
+      console.log(`⚠️ Auto-escalated complaint #${c.id}`);
+    }
+
+    if (pending.length > 0) console.log(`✅ ${pending.length} complaints auto-escalated`);
+  } catch (err) {
+    console.error("❌ Auto-escalation error:", err);
+  }
+}
+
+// Run every hour
+setInterval(autoEscalateComplaints, 3600000);
 
 /* =============================
    START SERVER

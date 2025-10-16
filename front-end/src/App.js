@@ -10,6 +10,7 @@ import MyComplaints from "./MyComplaints";
 import Profile from "./Profile";
 import ComplaintStatus from "./ComplaintStatus";
 import AdminDashboard from "./AdminDashboard";
+import EscalateComplaint from "./EscalateComplaint"; // ✅ New import
 import "./App.css";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -71,6 +72,16 @@ const App = () => {
             element={
               <ProtectedRoute allowedRoles={["user"]}>
                 <ComplaintStatus />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ✅ New Escalation Page Route */}
+          <Route
+            path="/complaints/:id/escalate"
+            element={
+              <ProtectedRoute allowedRoles={["user", "admin"]}>
+                <EscalateComplaint />
               </ProtectedRoute>
             }
           />

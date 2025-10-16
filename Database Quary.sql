@@ -129,3 +129,30 @@ DESCRIBE users;
 INSERT INTO users (name, email, password, role)
 VALUES ('System Admin', 'admin@gmail.com', 'admin123', 'admin');
 
+
+SELECT * FROM users;
+
+SELECT id, name, email, password, role FROM users;
+
+DESCRIBE status_logs;
+
+
+SHOW TABLES;
+
+
+desc complaints;
+select * from complaints;
+ALTER TABLE complaints 
+ADD COLUMN escalated BOOLEAN DEFAULT 0,
+ADD COLUMN escalated_at DATETIME NULL;
+
+
+SELECT id, name, email, role FROM users;
+
+
+
+INSERT INTO users (name, email, password, role)
+VALUES 
+('Staff One', 'staff1@gmail.com', 'staff123', 'staff'),
+('Staff Two', 'staff2@gmail.com', 'staff123', 'staff'),
+('Staff Three', 'staff3@gmail.com', 'staff123', 'staff');

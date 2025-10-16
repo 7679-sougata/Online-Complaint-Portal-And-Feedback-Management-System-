@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./MyComplaint.css";
+import "./MyComplaint.css";  // assuming this is the CSS file you use
 
 const MyComplaints = () => {
   const navigate = useNavigate();
@@ -26,20 +26,38 @@ const MyComplaints = () => {
           </div>
         ) : (
           complaints.map((c) => (
-            <div
-              key={c.id}
-              className="mc-item"
-              onClick={() => navigate(`/complaints/${c.id}`)}
-            >
+            <div key={c.id} className="mc-item">
               <div className="mc-item-row">
                 <span className="mc-item-id">#{c.id}</span>
-                <span className={`mc-status ${c.status ? c.status.replace(" ", "-").toLowerCase() : ""}`}>
+                <span
+                  className={`mc-status ${
+                    c.status ? c.status.replace(" ", "-").toLowerCase() : ""
+                  }`}
+                >
                   {c.status || "Submitted"}
                 </span>
               </div>
               <div className="mc-item-subject">{c.subject}</div>
               <div className="mc-item-date">
                 {c.created_at ? new Date(c.created_at).toLocaleDateString() : ""}
+              </div>
+
+              <div className="mc-item-actions">
+                <button
+                  className="view-btn"
+                  onClick={() => navigate(`/complaints/${c.id}`)}
+                >
+                  View
+                </button>
+
+                {c.status !== "Resolved" && c.status !== "Escalated" && (
+                  <button
+                    className="escalate-btn"
+                    onClick={() => navigate(`/complaints/${c.id}/escalate`)}
+                  >
+                    Escalate
+                  </button>
+                )}
               </div>
             </div>
           ))
