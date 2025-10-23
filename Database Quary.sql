@@ -116,7 +116,7 @@ CREATE TABLE reports (
 );
 
 
-SELECT * FROM complaints;
+SELECT * FROM reports;
 
 delete from complaints where id<4;
 
@@ -156,3 +156,20 @@ VALUES
 ('Staff One', 'staff1@gmail.com', 'staff123', 'staff'),
 ('Staff Two', 'staff2@gmail.com', 'staff123', 'staff'),
 ('Staff Three', 'staff3@gmail.com', 'staff123', 'staff');
+
+show tables;
+
+
+
+
+CREATE TABLE IF NOT EXISTS report_logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  admin_id INT NOT NULL,
+  start_date DATE,
+  end_date DATE,
+  category VARCHAR(100),
+  format ENUM('csv','pdf') NOT NULL,
+  generated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (admin_id) REFERENCES users(id)
+);
+select * from report_logs;

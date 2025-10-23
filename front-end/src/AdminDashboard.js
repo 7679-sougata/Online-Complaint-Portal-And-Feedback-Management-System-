@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
+import { useNavigate } from "react-router-dom"; // ✅ Added
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate(); // ✅ Added
 
   // Fetch all complaints
   const fetchComplaints = useCallback(async () => {
@@ -174,6 +176,16 @@ export default function AdminDashboard() {
           )}
         </tbody>
       </table>
+
+      {/* ✅ New Reports Button */}
+      <div className="reports-button-container">
+        <button
+          className="reports-btn"
+          onClick={() => navigate("/admin/reports")}
+        >
+          📊 Go to Reports & Export
+        </button>
+      </div>
     </div>
   );
 }

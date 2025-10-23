@@ -3,6 +3,12 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import pool from "./Service.js"; // MySQL connection
 
+
+import fs from "fs";
+import { Parser } from "json2csv";
+import PDFDocument from "pdfkit";
+
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -340,3 +346,97 @@ app.listen(5000, () => {
   console.log("✅ Server running on http://localhost:5000");
   console.log("✅ Database connected successfully");
 });
+
+
+
+
+/* =============================
+   ADMIN: GENERATE REPORT & EXPORT (CSV / PDF)
+   POST body: { startDate, endDate, submissionType, format, admin_id }
+   startDate/endDate format: "YYYY-MM-DD"
+============================= */
+app.post("/admin/reports/export", async (req, res) => {
+  const { startDate, endDate, submissionType, format, admin_id } = req.body;
+  try {
+    let query = `
+      SELECT id, user_id, subject, submission_type, status, created_at, updated_at, escalated, escalated_at, assigned_to
+      FROM complaints
+      WHERE 1=1
+    `;
+    const params = [];
+
+    if (startDate && endDate) {
+      query += ` AND DATE(created_at) BETWEEN ? AND ?`;
+      params.push(startDate, endDate);
+    }
+
+    if (submissionType && submissionType !== "All") {
+      query += ` AND submission_type = ?`;
+      params.push(submissionType);
+    }
+
+    // fetch data
+    const [rows] = await pool.query(query, params);
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ message: "No complaints found in the given range" });
+    }
+
+    // optional: log the request in report_logs
+    if (admin_id) {
+      try {
+        await pool.query(
+          `INSERT INTO report_logs (admin_id, start_date, end_date, category, format)
+           VALUES (?, ?, ?, ?, ?)`,
+          [admin_id || null, startDate || null, endDate || null, submissionType || null, format || "csv"]
+        );
+      } catch (err) {
+        console.warn("⚠️ Could not log report generation:", err.message);
+      }
+    }
+
+    // CSV export
+    if (format === "csv") {
+      const { Parser } = await import("json2csv");
+      const parser = new Parser();
+      const csv = parser.parse(rows);
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", "attachment; filename=complaint_report.csv");
+      return res.send(csv);
+    }
+
+    // PDF export
+    if (format === "pdf") {
+      const PDFDocument = (await import("pdfkit")).default;
+      const doc = new PDFDocument({ margin: 30, size: "A4" });
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "attachment; filename=complaint_report.pdf");
+      doc.pipe(res);
+
+      doc.fontSize(18).text("Complaint Report", { align: "center" });
+      doc.moveDown();
+
+      rows.forEach((r, i) => {
+        doc.fontSize(12).text(`${i + 1}. ${r.subject}`);
+        doc.fontSize(10).text(
+          `ID: ${r.id} | Type: ${r.submission_type || "N/A"} | Status: ${r.status || "N/A"}`
+        );
+        doc.fontSize(10).text(`Created: ${new Date(r.created_at).toLocaleString()}`);
+        doc.fontSize(10).text(
+          `Escalated: ${r.escalated ? "Yes" : "No"} ${
+            r.escalated_at ? `| Escalated At: ${new Date(r.escalated_at).toLocaleString()}` : ""
+          }`
+        );
+        doc.moveDown();
+      });
+
+      doc.end();
+      return; // end PDF stream
+    }
+
+    return res.status(400).json({ message: "Invalid export format. Use 'csv' or 'pdf'." });
+  } catch (err) {
+    console.error("❌ Report generation error:", err);
+    return res.status(500).json({ message: "Server error generating report" });
+  }
+});
+
